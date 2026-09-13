@@ -115,6 +115,7 @@ nano .env
 Start the gateway:
 
 npm run dev
+
 🍎 macOS Installation
 
 Install Git and Node.js.
@@ -144,7 +145,9 @@ you configure.
 Example .env:
 
 OPENROUTER_API_KEY=
+
 NVIDIA_API_KEY=
+
 GROQ_API_KEY=
 
 BROWSER_BRIDGE_TOKEN=
