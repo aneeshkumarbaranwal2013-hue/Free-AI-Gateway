@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Free AI Gateway</title>
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+                <div class="brand-name">Free AI Gateway</div>
+                <div class="brand-subtitle">AI Coding Workspace</div>
+            </div>
+        </div>
+
+        <button id="newChat" class="new-chat">
+            <span>＋</span>
+            New Chat
+        </button>
+
+        <div class="section-title">CHATS</div>
+
+        <div id="chatList" class="chat-list"></div>
+
+        <div class="sidebar-bottom">
+
+            <div class="connection">
+                <span class="status-dot"></span>
+                <span>Gateway connected</span>
+            </div>
+
+            <div class="version">
+                Free AI Gateway v0.1
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="mode-tabs">
+
+                <button class="mode active" data-mode="chat">
+                    Chat
+                </button>
+
+                <button class="mode" data-mode="code">
+                    Code Agent
+                </button>
+
+            </div>
+
+            <div class="model-area">
+
+                <span class="free-label">
+                    FREE
+                </span>
+
+                <select id="modelSelect">
+                    <option>Loading models...</option>
+                </select>
+
+            </div>
+
+        </header>
+
+
+        <section id="messages" class="messages">
+
+            <div class="welcome">
+
+                <div class="welcome-icon">
+                    ✦
+                </div>
+
+                <h1>Free AI Workspace</h1>
+
+                <p>
+                    Chat with your free AI models or use Code Agent
+                    to work on your projects.
+                </p>
+
+                <div class="quick-actions">
+
+                    <button data-prompt="Explain this project to me">
+                        Explain my project
+                    </button>
+
+                    <button data-prompt="Help me debug my code">
+                        Debug code
+                    </button>
+
+                    <button data-prompt="Help me build a Minecraft mod">
+                        Build something
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <div class="composer-wrapper">
+
+            <div id="modeHint" class="mode-hint">
+                Chat mode
+            </div>
+
+            <div class="composer">
+
+                <textarea
+                    id="prompt"
+                    placeholder="Ask anything..."
+                    rows="1"
+                ></textarea>
+
+                <div class="composer-bottom">
+
+                    <div class="composer-tools">
+
+                        <button id="attachBtn" title="Coming soon">
+                            ＋
+                        </button>
+
+                        <span id="composerStatus">
+                            Ready
+                        </span>
+
+                    </div>
+
+                    <button id="sendBtn" class="send">
+                        ↑
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="footer-note">
+                Free models only • localhost gateway
+            </div>
+
+        </div>
+
+        <div id="agentView" hidden></div>
+</main>
+
+</div>
+
+<link rel="stylesheet" href="/agent/agent.css">
+<script src="/app.js"></script>
+
+</body>
+</html>

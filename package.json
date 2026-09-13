@@ -1,0 +1,23 @@
+{
+    "name": "free-ai-gateway",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "server": "tsx apps/server/index.ts",
+        "cli": "tsx apps/cli/index.ts",
+        "typecheck": "tsc --noEmit",
+        "browser:chatgpt": "tsx apps/browser-bridge/index.ts",
+        "browser:claude": "tsx apps/browser-bridge/claude.ts"
+    },
+    "dependencies": {
+        "dotenv": "^17.2.1",
+        "fastify": "^5.4.0",
+        "playwright": "^1.63.0"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.0",
+        "tsx": "^4.20.3",
+        "typescript": "^5.9.2"
+    }
+}

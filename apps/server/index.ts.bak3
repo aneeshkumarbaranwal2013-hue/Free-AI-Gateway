@@ -1,0 +1,204 @@
+import "dotenv/config";
+
+import Fastify from "fastify";
+
+import { OpenRouterProvider } from "../../packages/providers/openrouter";
+import {
+    OpenAICompatibleProvider
+} from "../../packages/providers/openai-compatible";
+
+import type { AIProvider } from "../../packages/core/types";
+import { NvidiaNimProvider } from "../../packages/providers/nvidia-nim";
+import { GroqProvider } from "../../packages/providers/groq";
+import { AIRouter } from "../../packages/core/router";
+
+const app = Fastify({
+    logger: true
+});
+
+const providers: AIProvider[] = [];
+
+const openrouter =
+    process.env.OPENROUTER_API_KEY
+        ? new OpenRouterProvider()
+        : null;
+
+if (openrouter) {
+    providers.push(openrouter);
+}
+
+// ZERO-COST MODE: Gemini disabled.
+const gemini = null;
+
+// ZERO-COST MODE: Groq disabled.
+const groq = null;
+
+const nvidia =
+    process.env.NVIDIA_API_KEY
+        ? new NvidiaNimProvider()
+        : null;
+
+if (nvidia) {
+    providers.push(nvidia);
+}
+
+// ZERO-COST MODE: Groq Free tier only.
+const groqProvider =
+    process.env.GROQ_API_KEY
+        ? new GroqProvider()
+        : null;
+
+if (groqProvider) {
+    providers.push(groqProvider);
+}
+
+if (providers.length === 0) {
+    throw new Error(
+        "No AI providers configured. Set at least one API key."
+    );
+}
+
+const router =
+    new AIRouter(providers);
+
+app.get("/health", async () => {
+    return {
+        status: "ok",
+        router: "adaptive-free",
+        providers: providers.map(
+            provider => provider.id
+        )
+    };
+});
+
+app.get("/v1/models", async () => {
+    const models =
+        await router.listModels();
+
+    return {
+        object: "list",
+        data: models
+    };
+});
+
+app.post(
+    "/v1/chat/completions",
+    async (request, reply) => {
+        const body =
+            request.body as any;
+
+        if (
+            !body.model ||
+            !body.messages
+        ) {
+            return reply
+                .code(400)
+                .send({
+                    error:
+                        "model and messages are required"
+                });
+        }
+
+        const stream =
+            body.stream === true;
+
+        const chatRequest = {
+            model: body.model,
+            messages: body.messages,
+            stream
+        };
+
+        if (!stream) {
+            let content = "";
+
+            for await (
+                const chunk of
+                router.chat(chatRequest)
+            ) {
+                content += chunk.text;
+            }
+
+            return {
+                id: "chat-completion",
+                object: "chat.completion",
+                choices: [
+                    {
+                        index: 0,
+                        message: {
+                            role: "assistant",
+                            content
+                        },
+                        finish_reason: "stop"
+                    }
+                ]
+            };
+        }
+
+        reply.raw.writeHead(
+            200,
+            {
+                "Content-Type":
+                    "text/event-stream",
+                "Cache-Control":
+                    "no-cache",
+                "Connection":
+                    "keep-alive"
+            }
+        );
+
+        try {
+            for await (
+                const chunk of
+                router.chat(chatRequest)
+            ) {
+                reply.raw.write(
+                    `data: ${JSON.stringify({
+                        choices: [
+                            {
+                                index: 0,
+                                delta: {
+                                    content:
+                                        chunk.text
+                                }
+                            }
+                        ]
+                    })}\n\n`
+                );
+            }
+
+            reply.raw.write(
+                "data: [DONE]\n\n"
+            );
+
+        } catch (error) {
+            console.error(error);
+
+            reply.raw.write(
+                `data: ${JSON.stringify({
+                    error:
+                        error instanceof Error
+                            ? error.message
+                            : String(error)
+                })}\n\n`
+            );
+        }
+
+        reply.raw.end();
+    }
+);
+
+app.listen({
+    port: 8080,
+    host: "127.0.0.1"
+}).then(() => {
+    console.log(
+        "🚀 FreeAI Gateway running at http://127.0.0.1:8080"
+    );
+
+    console.log(
+        "Providers:",
+        providers
+            .map(provider => provider.id)
+            .join(", ")
+    );
+});
