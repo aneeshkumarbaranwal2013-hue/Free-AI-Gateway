@@ -70,9 +70,9 @@ Replace YOUR_USERNAME with the GitHub account that owns the repository.
 npm install
 5. Configure environment variables
 
-Create your local .env file from the example:
+Create .env file with:
 
-Copy-Item .env.example .env
+env contents from example mention in the last 5-6 lines.
 
 Open it:
 
@@ -83,8 +83,23 @@ Add the API keys for the providers you want to use.
 Never publish your .env file.
 
 6. Start the gateway
-npm run dev
+npm run server
 
+7. To configure web AIs like claude and gpt models: (optional but good cuz gpt and claude models are op)
+   for chatgpt:
+   get an extension like cookie extractor.
+   go to chatgpt.com
+   make sure you are logged in.
+   export cookies to json from cookie extractor
+   make a new file in the folder called cookies.json
+   paste the exported json content
+   run: npm run browser:chatgpt
+
+   for claude:
+   run: npm run browser:claude
+   it will open chromium
+   so login there do not use cookies or cloudfare security will make it stuck in an infinite loop
+   
 The gateway should start locally.
 
 Open the address shown by the terminal in your browser.
