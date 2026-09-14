@@ -86,6 +86,7 @@ Never publish your .env file.
 npm run server
 
 7. To configure web AIs like claude and gpt models: (optional but good cuz gpt and claude models are op)
+first set your BROWSER_BRIDGE_TOKEN in .env.
    for chatgpt:
    get an extension like cookie extractor.
    go to chatgpt.com
@@ -95,7 +96,7 @@ npm run server
    paste the exported json content
    run: npm run browser:chatgpt
 
-   for claude:
+   for claude: (make sure you have chromium installed)
    run: npm run browser:claude
    it will open chromium
    so login there do not use cookies or cloudfare security will make it stuck in an infinite loop
@@ -121,7 +122,11 @@ npm install
 
 Create the environment file:
 
-cp .env.example .env
+make .env file mentioned as example in the last of readme.md
+
+To configure web AIs like claude and gpt models:
+
+same as windows
 
 Edit it:
 
@@ -129,7 +134,7 @@ nano .env
 
 Start the gateway:
 
-npm run dev
+npm run server
 
 🍎 macOS Installation
 
@@ -143,7 +148,11 @@ npm install
 
 Create the environment file:
 
-cp .env.example .env
+make .env file mentioned as example in the last of readme.md
+
+To configure web AIs like claude and gpt models:
+
+same as windows
 
 Edit it:
 
@@ -151,7 +160,7 @@ nano .env
 
 Start:
 
-npm run dev
+npm run server
 🔑 Provider Configuration
 
 The gateway can use different AI providers depending on which credentials
@@ -169,4 +178,4 @@ BROWSER_BRIDGE_TOKEN=
 
 Leave providers blank if you don't want to use them.
 
-NOTE- THIS WAS VIBE CODED BY CHATGPT IDK WHAT IS CODING if u know how to code u can improve this idc.
+NOTE- THIS WAS VIBE CODED BY CHATGPT IDK WHAT IS CODING if u know how to code u can improve this idc. Also you might see a coding environment in the UI (localhost:8080) but it will say that some files are not found as i tried to implement it but it failed so some of the leftovers are still there.
